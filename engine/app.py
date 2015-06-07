@@ -44,5 +44,24 @@ class Okapi(App):
         )
         self.resize_window(Window)
 
+        self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
+        self._keyboard.bind(on_key_down=self._on_keyboard_down)
+
         return self.root
+
+    def _keyboard_closed(self):
+        self._keyboard.unbind(on_key_down=self._on_keyboard_down)
+        self._keyboard = None
+
+    def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
+        self.root._on_keyboard_down(keyboard, keycode, text, modifiers)
+
+        # Catch `cmd-w` because I can't stand that that doesn't close the app
+        if 'meta' in modifiers and keycode[0] == 119:
+            self.close_window()
+
+    def close_window(self):
+        Window.close()
+
+
 

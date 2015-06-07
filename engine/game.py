@@ -13,10 +13,13 @@ class Level(GridLayout):
     PADDING = 0
     SPACING = 0
 
-    def __init__(self, raw_level, ground_map, project_path, **kwargs):
+    def __init__(self, raw_level, ground_map, project_path, on_add_actor, **kwargs):
 
         self.raw_level = raw_level
         self.project_path = project_path
+
+        # Callback for when there's a new actor
+        self.on_add_actor = on_add_actor
 
         # Zip this lists of tuples into dicts
         # self.ground_map = {key: value for key, value in ground_map}
@@ -33,7 +36,19 @@ class Level(GridLayout):
 
         super(Level, self).__init__(**kwargs)
 
-        self.objectify()
+        self.hydrate_ground()
+
+    def get_ground_by_coords(self, x, y):
+        # No toruses!
+        if x < 0 or y < 0:
+            return None
+        try:
+            return self.ground[x][y]
+        except IndexError:
+            # If the player is at the edge of the map and tries to move
+            # further, no worries, we just return None which indicates
+            # that the desired ground doesn't exist.
+            return None
 
     def get_longest_column(self, raw_level):
         """
@@ -46,7 +61,7 @@ class Level(GridLayout):
                 most_columns = len(row)
         return most_columns
 
-    def objectify(self):
+    def hydrate_ground(self):
         """
         Works through ``self.raw_level``, which is a list of lists of chars,
         and puts that through ``self.ground_map`` to know which terrain is where.
@@ -61,7 +76,11 @@ class Level(GridLayout):
                 ground_type_cls = self.ground_map[column_character]
 
                 # Put the piece of ground in its place, with the path prefix
-                self.ground[row_index].append(ground_type_cls(path_prefix=self.project_path))
+                self.ground[row_index].append(ground_type_cls(
+                    coords=((row_index), (column_index),),
+                    path_prefix=self.project_path,
+                    on_add_actor=self.on_add_actor
+                ))
 
     def render(self):
         # self.clear_old_ground()
@@ -122,19 +141,31 @@ class Game(BoxLayout):
     def get_level_class(self, level_number):
         return self.LEVEL_CLASS
 
+    def on_add_actor(self, actor, level):
+        print(actor, level)
+
     def get_levels(self):
         for index, raw_level in enumerate(self.raw_levels):
             yield self.get_level_class(index)(
                 raw_level=raw_level,
                 # ground_map=self.configuration.items('levelmap'),
                 ground_map=self.get_ground_map(),
-                project_path=self.project_path
+                project_path=self.project_path,
+                on_add_actor=self.on_add_actor
             )
+
+    @property
+    def current_level(self):
+        return self._current_level
+
+    @current_level.setter
+    def current_level(self, value):
+        self.clear_widgets()
+        self._current_level = value
+        self.add_widget(self._current_level.render())
 
     def start(self):
         # Totally wrong, but not sure yet how to do this
         levels = [level for level in self.get_levels()]
-
-        first_level = levels[0]
-        self.add_widget(first_level.render())
+        self.current_level = levels[0]
 

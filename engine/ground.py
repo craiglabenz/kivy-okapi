@@ -20,11 +20,18 @@ class BaseGround(object):
 
     initial_actor_cls = None
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, coords, *args, **kwargs):
+
+        self.x = coords[0]
+        self.y = coords[1]
+        self.on_add_actor = kwargs.get('on_add_actor', None)
 
         # Must provide a valid source
         assert 'source' in kwargs or self.sprite_path, 'Failed to initialize {} with a `source`'.format(type(self).__name__)
         source = kwargs.pop('source', self.sprite_path)
+
+        self.container = self.get_container()
+        self.ground_sprite = Sprite(source=source)
 
         # Setup the initial the actor
         self._actor = None
@@ -32,8 +39,9 @@ class BaseGround(object):
 
         # The entire Ground class is really just a wrapper around
         # this container, which stores all required Sprite widgets
-        self.container = self.get_container()
-        self.ground_sprite = Sprite(source=source)
+
+    def __repr__(self):
+        return '{} at ({}, {})'.format(type(self).__name__, self.x, self.y)
 
     def get_container(self):
         return RelativeLayout()
@@ -45,17 +53,28 @@ class BaseGround(object):
         if self.initial_actor_cls:
             return self.initial_actor_cls()
 
+    def can_accommodate(self, actor):
+        # Can accommodate if currently empty
+        return self.is_empty
+
+    @property
+    def is_empty(self):
+        return not bool(self.actor)
+
     @property
     def actor(self):
         return self._actor
 
     @actor.setter
     def actor(self, value):
-        if self._actor:
-            self.remove_widget(self._actor)
-
         self._actor = value
 
+        if self._actor:
+            self._actor.ground = self
+            if self.on_add_actor:
+                self.on_add_actor(self._actor, self)
+
+        self.render()
 
     def render(self):
         self.container.clear_widgets()

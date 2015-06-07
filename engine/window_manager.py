@@ -11,6 +11,8 @@ class WindowManager(BoxLayout):
     GAME_CLASS = None
 
     def __init__(self, configuration, project_path, game_class=None):
+        self._current_screen = None
+
         self.configuration = configuration
         self.project_path = project_path
 
@@ -27,7 +29,7 @@ class WindowManager(BoxLayout):
         assert hasattr(self.welcome_screen, 'starter'), 'Must put a clickable attribute ``starter`` on welcome screen used to start the game.'
 
         self.welcome_screen.starter.bind(on_press=self.start_game)
-        self.add_widget(self.welcome_screen)
+        self.current_screen = self.welcome_screen
 
         # To more quickly get into the game during dev
         self.start_game(None)
@@ -48,13 +50,42 @@ class WindowManager(BoxLayout):
         """
         return self.get_game_class()(**kwargs)
 
+    def render(self):
+        self.clear_widgets()
+        self.add_widget(self.current_screen)
+
+    @property
+    def current_screen(self):
+        """
+        Property used to wrap whichever screen is current to facilitate
+        the swapping of screens and also automatically directing all user
+        input to the correct screen.
+        """
+        return self._current_screen
+
+    @current_screen.setter
+    def current_screen(self, value):
+        """
+        Setter for the @current_screen prop that also triggers a render.
+        """
+        self._current_screen = value
+        self.render()
+
     def start_game(self, instance):
         """Handler for the ``click to continue`` click
         """
-        self.remove_widget(self.welcome_screen)
         self.game = self.get_game(
             configuration=self.configuration,
             project_path=self.project_path
         )
-        self.add_widget(self.game)
+        self.current_screen = self.game
         self.game.start()
+
+    def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
+        if not modifiers:
+            command_name = 'on_move_{}'.format(keycode[1])
+            command = getattr(self.current_screen, command_name, None)
+            if command is not None:
+                command()
+
+
