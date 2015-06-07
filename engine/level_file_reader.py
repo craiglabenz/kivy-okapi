@@ -5,7 +5,6 @@ from kivy.uix.image import Image
 from kivy.uix.widget import Widget
 
 # TODO: Handle this creation somewhere in app init
-PATH_TO_LEVEL_FILE = 'Levels.txt'
 IMAGES_DICTIONARY = {'okapi': '/Assets/Sprites/okapi.png',
                      'normal_ground': '/Assets/Sprites/normal_ground.png',
                      'wall': '/Assets/Sprites/wall.png'
@@ -27,9 +26,9 @@ class SpriteMap(object):
 class LevelFileReader(object):
     """Level loader, reads a level file, returns a level object
     """
-    def __init__(self):
+    def __init__(self, path):
         # TODO: Get this from app init
-        self.levels = self.parse_file(PATH_TO_LEVEL_FILE)
+        self.levels = self.parse_file(path)
 
     def parse_file(self, level_file):
         """Turns a levels file into a Levels object
@@ -38,18 +37,32 @@ class LevelFileReader(object):
         levels = []
         current_level = []
         lines = self.open_and_read_file(level_file)
+
         for line in lines:
-            if self.is_comment(line):  # Ignore comment lines
+
+            # Ignore comment lines
+            if self.is_comment(line):
                 continue
+
+            # Split up the string into a proper list
             line = [l for l in line]
-            if line:  # Put all lines into current level
+
+            # If the line is real, we want it
+            if line:
                 current_level.append(line)
-            else:  # At blank line; dump current level to levels
+
+            # At blank line, finalize the current level and add
+            # it to ``this.levels``
+            else:
                 if current_level:
                     self.add_to_levels(levels, current_level)
                     current_level = []
-        if current_level:  # Dump the final level into levels
+
+        # Don't forget trailing content if the file didn't end
+        # with an empty newline
+        if current_level:
             self.add_to_levels(levels, current_level)
+
         return levels
 
     def is_comment(self, line):
@@ -81,67 +94,67 @@ class LevelFileReader(object):
             raise IOError("Level File Not Found!")
 
 
-class Sprite(Image):
-    def __init__(self, **kwargs):
-        super(Sprite, self).__init__(**kwargs)
-        self.size = self.texture_size
+# class Sprite(Image):
+#     def __init__(self, **kwargs):
+#         super(Sprite, self).__init__(**kwargs)
+#         self.size = self.texture_size
 
 
-class Ground(Widget):
-    def __init__(self):
-        self.sprite_path = None
-        self.actor = None
+# class Ground(Widget):
+#     def __init__(self):
+#         self.sprite_path = None
+#         self.actor = None
 
-        def get_sprite_path(self):
-            if self.sprite_path:
-                pass
-
-
-
-        def render(self):
-            self.add_widget(Sprite(source=self.get_sprite_path())
-            if self.actor:
-                self.add_widget(Sprite(source=self.actor_path))
+#         def get_sprite_path(self):
+#             if self.sprite_path:
+#                 pass
 
 
-class Actor(Ground):
-    def __init__(self):
-        super(Ground, self).__init__()
-        # self.actor = actor
+
+#         def render(self):
+#             self.add_widget(Sprite(source=self.get_sprite_path())
+#             if self.actor:
+#                 self.add_widget(Sprite(source=self.actor_path))
 
 
-class Generic(object):
-    def __init__(self):
-        self.name = 'Generic'
+# class Actor(Ground):
+#     def __init__(self):
+#         super(Ground, self).__init__()
+#         # self.actor = actor
 
 
-class Child(Generic):
-    def __init__(self):
-        super(Generic, self).__init__()
-        self.name = 'Child'
+# class Generic(object):
+#     def __init__(self):
+#         self.name = 'Generic'
 
 
-class GameStateInitializer(object):
-    def __init__(self, level_number):
-        self.raw_levels = LevelFileReader().levels
-        self.level_number = level_number
-        self.spritemap = SpriteMap()
+# class Child(Generic):
+#     def __init__(self):
+#         super(Generic, self).__init__()
+#         self.name = 'Child'
 
-    def create_objects(self):
-        game_objects = []
-        raw_level = copy.copy(self.raw_levels[self.level_number])
-        for row in raw_level:
-            game_objects.append([self.objectify(element) for element in row])
-        return game_objects
 
-    def objectify(self, raw_object):
-        """Objectify level raw text into objects
-        """
-        spritemap = SpriteMap()
-        if raw_object in spritemap.actors.keys():
-            return Actor(raw_object)
-        else:
-            return Ground(raw_object)
+# class GameStateInitializer(object):
+#     def __init__(self, level_number):
+#         self.raw_levels = LevelFileReader().levels
+#         self.level_number = level_number
+#         self.spritemap = SpriteMap()
+
+#     def create_objects(self):
+#         game_objects = []
+#         raw_level = copy.copy(self.raw_levels[self.level_number])
+#         for row in raw_level:
+#             game_objects.append([self.objectify(element) for element in row])
+#         return game_objects
+
+#     def objectify(self, raw_object):
+#         """Objectify level raw text into objects
+#         """
+#         spritemap = SpriteMap()
+#         if raw_object in spritemap.actors.keys():
+#             return Actor(raw_object)
+#         else:
+#             return Ground(raw_object)
 
 
 if __name__ == '__main__':

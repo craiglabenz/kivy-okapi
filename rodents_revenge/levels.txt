@@ -1,0 +1,32 @@
+;Posterity LOVES comments
+
+;Level 1
+coooooor
+oobbbboo
+oobbbboo
+oobbbboo
+oooooooo
+oooooooc
+
+
+;#############
+;#       d   #
+;#    c      #
+;#       x   #
+;#           #
+;#    ooo    #
+;#           #
+;#############
+
+
+;#######
+;#     #
+;#######
+
+
+
+;    ######
+;#####    #
+;#        #
+;#        #
+;##########
