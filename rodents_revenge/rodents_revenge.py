@@ -34,7 +34,16 @@ class Game(OkapiGame):
     def __init__(self, *args, **kwargs):
         super(Game, self).__init__(*args, **kwargs)
 
+        self.initialize_level_specific_objects()
+
+    def on_new_level(self):
+        """Reset the level-specific objects
+        """
+        self.initialize_level_specific_objects()
+
+    def initialize_level_specific_objects(self):
         self._player_actor = None
+        self.cats = []
 
     @property
     def player_actor(self):
@@ -50,6 +59,9 @@ class Game(OkapiGame):
     def on_add_actor(self, actor, level):
         if isinstance(actor, actors.Rat):
             self.player_actor = actor
+
+        if isinstance(actor, actors.Cat):
+            self.cats.append(actor)
 
     def on_move_down(self):
         self._move(1, 0)

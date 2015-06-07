@@ -105,9 +105,10 @@ class Game(BoxLayout):
     EXTRA_GROUNDS = {}
     BLANK_GROUND_CHARACTER = ' '
 
-    def __init__(self, configuration, project_path, **kwargs):
+    def __init__(self, configuration, project_path, current_level_index=0, **kwargs):
         self.configuration = configuration
         self.project_path = project_path
+        self.current_level_index = current_level_index
         self.raw_levels = LevelFileReader(self.configuration.get('meta', 'levels_file')).levels
         super(Game, self).__init__(**kwargs)
 
@@ -144,15 +145,16 @@ class Game(BoxLayout):
     def on_add_actor(self, actor, level):
         print(actor, level)
 
-    def get_levels(self):
-        for index, raw_level in enumerate(self.raw_levels):
-            yield self.get_level_class(index)(
-                raw_level=raw_level,
-                # ground_map=self.configuration.items('levelmap'),
-                ground_map=self.get_ground_map(),
-                project_path=self.project_path,
-                on_add_actor=self.on_add_actor
-            )
+    def get_level(self, level_index):
+        self.on_new_level()
+        return self.get_level_class(level_index)(
+            raw_level=self.raw_levels[level_index],
+            ground_map=self.get_ground_map(),
+            project_path=self.project_path,
+            on_add_actor=self.on_add_actor,
+            # Don't tell someone they're on the 0th level. That shit's crazy
+            level_index=level_index + 1
+        )
 
     @property
     def current_level(self):
@@ -162,10 +164,12 @@ class Game(BoxLayout):
     def current_level(self, value):
         self.clear_widgets()
         self._current_level = value
+
         self.add_widget(self._current_level.render())
 
+    def on_new_level(self, new_level):
+        pass
+
     def start(self):
-        # Totally wrong, but not sure yet how to do this
-        levels = [level for level in self.get_levels()]
-        self.current_level = levels[0]
+        self.current_level = self.get_level(self.current_level_index)
 

@@ -30,15 +30,14 @@ class BaseGround(object):
         assert 'source' in kwargs or self.sprite_path, 'Failed to initialize {} with a `source`'.format(type(self).__name__)
         source = kwargs.pop('source', self.sprite_path)
 
+        # The entire Ground class is really just a wrapper around
+        # this container, which stores all required Sprite widgets
         self.container = self.get_container()
         self.ground_sprite = Sprite(source=source)
 
         # Setup the initial the actor
         self._actor = None
         self.actor = kwargs.get('actor', self.get_initial_actor())
-
-        # The entire Ground class is really just a wrapper around
-        # this container, which stores all required Sprite widgets
 
     def __repr__(self):
         return '{} at ({}, {})'.format(type(self).__name__, self.x, self.y)
@@ -70,9 +69,11 @@ class BaseGround(object):
         self._actor = value
 
         if self._actor:
+
+            if self._actor.ground is None:
+                if self.on_add_actor:
+                    self.on_add_actor(self._actor, self)
             self._actor.ground = self
-            if self.on_add_actor:
-                self.on_add_actor(self._actor, self)
 
         self.render()
 
