@@ -23,12 +23,12 @@ import ground
 
 class Game(OkapiGame):
 
-    BLANK_GROUND_CHARACTER = 'o'
+    BLANK_GROUND_CHARACTER = '.'
     EXTRA_GROUNDS = {
         "b": ground.BlockGround,
         "c": ground.CatGround,
         "r": ground.RatGround,
-        "x": ground.ImpassableGround,
+        "#": ground.ImpassableGround,
     }
 
     def __init__(self, *args, **kwargs):

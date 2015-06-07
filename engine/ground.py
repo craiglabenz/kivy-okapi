@@ -54,7 +54,7 @@ class BaseGround(object):
 
     def can_accommodate(self, actor):
         # Can accommodate if currently empty
-        return self.is_empty
+        return self.is_passable and self.is_empty
 
     @property
     def is_empty(self):

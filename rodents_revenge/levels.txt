@@ -1,12 +1,14 @@
 ;Posterity LOVES comments
 
+
+
 ;Level 1
-coooooor
-oobbbboo
-oobbbboo
-oobbbboo
-oooooooo
-oooooooc
+c......r
+..bbbb..
+..bbbb.#
+..bbbb..
+........
+.......c
 
 
 ;#############

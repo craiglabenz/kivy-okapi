@@ -29,4 +29,4 @@ class BlockGround(OpenGround):
 
 class ImpassableGround(okapi_ground.BaseGround):
     is_passable = False
-    sprite_path = 'assets/images/impassable-ground-50.png'
+    sprite_path = 'assets/images/impassable-50.png'
