@@ -63,24 +63,28 @@ class Game(OkapiGame):
         if isinstance(actor, actors.Cat):
             self.cats.append(actor)
 
-    def on_move_down(self):
-        self._move(1, 0)
+    def on_move_down(self, actor=None):
+        actor = actor or self.player_actor
+        self._move(actor, 1, 0)
 
-    def on_move_up(self):
-        self._move(-1, 0)
+    def on_move_up(self, actor=None):
+        actor = actor or self.player_actor
+        self._move(actor, -1, 0)
 
-    def on_move_left(self):
-        self._move(0, -1)
+    def on_move_left(self, actor=None):
+        actor = actor or self.player_actor
+        self._move(actor, 0, -1)
 
-    def on_move_right(self):
-        self._move(0, 1)
+    def on_move_right(self, actor=None):
+        actor = actor or self.player_actor
+        self._move(actor, 0, 1)
 
-    def _move(self, delta_x=0, delta_y=0):
-        current_ground = self.player_actor.ground
+    def _move(self, actor, delta_x=0, delta_y=0):
+        current_ground = actor.ground
         new_ground = self.current_level.get_ground_by_coords(current_ground.x + delta_x, current_ground.y + delta_y)
 
-        if new_ground and new_ground.can_accommodate(self.player_actor):
-            new_ground.actor = self.player_actor
+        if new_ground and new_ground.can_accommodate(actor, delta_x, delta_y):
+            new_ground.actor = actor
 
 
 class WindowManager(OkapiWindowManager):

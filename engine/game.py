@@ -13,10 +13,11 @@ class Level(GridLayout):
     PADDING = 0
     SPACING = 0
 
-    def __init__(self, raw_level, ground_map, project_path, on_add_actor, **kwargs):
+    def __init__(self, raw_level, ground_map, project_path, on_add_actor, game, **kwargs):
 
         self.raw_level = raw_level
         self.project_path = project_path
+        self.game = game
 
         # Callback for when there's a new actor
         self.on_add_actor = on_add_actor
@@ -78,7 +79,8 @@ class Level(GridLayout):
                 # Put the piece of ground in its place, with the path prefix
                 self.ground[row_index].append(ground_type_cls(
                     coords=((row_index), (column_index),),
-                    path_prefix=self.project_path,
+                    level=self,
+                    # path_prefix=self.project_path,
                     on_add_actor=self.on_add_actor
                 ))
 
@@ -143,7 +145,7 @@ class Game(BoxLayout):
         return self.LEVEL_CLASS
 
     def on_add_actor(self, actor, level):
-        print(actor, level)
+        pass
 
     def get_level(self, level_index):
         self.on_new_level()
@@ -152,6 +154,7 @@ class Game(BoxLayout):
             ground_map=self.get_ground_map(),
             project_path=self.project_path,
             on_add_actor=self.on_add_actor,
+            game=self,
             # Don't tell someone they're on the 0th level. That shit's crazy
             level_index=level_index + 1
         )

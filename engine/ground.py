@@ -20,10 +20,11 @@ class BaseGround(object):
 
     initial_actor_cls = None
 
-    def __init__(self, coords, *args, **kwargs):
+    def __init__(self, coords, level, *args, **kwargs):
 
         self.x = coords[0]
         self.y = coords[1]
+        self.level = level
         self.on_add_actor = kwargs.get('on_add_actor', None)
 
         # Must provide a valid source
@@ -52,7 +53,7 @@ class BaseGround(object):
         if self.initial_actor_cls:
             return self.initial_actor_cls()
 
-    def can_accommodate(self, actor):
+    def can_accommodate(self, actor, delta_x, delta_y):
         # Can accommodate if currently empty
         return self.is_passable and self.is_empty
 
