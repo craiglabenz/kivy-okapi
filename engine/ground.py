@@ -18,7 +18,7 @@ class BaseGround(object):
     cost_to_traverse = 1
     is_passable = True
 
-    initial_actor = None
+    initial_actor_cls = None
 
     def __init__(self, *args, **kwargs):
 
@@ -26,11 +26,9 @@ class BaseGround(object):
         assert 'source' in kwargs or self.sprite_path, 'Failed to initialize {} with a `source`'.format(type(self).__name__)
         source = kwargs.pop('source', self.sprite_path)
 
-        # Initialize the attr before calling `add_actor`
-        self.actor = self.get_initial_actor()
-
-        # Actors are, of course, optional
-        self.add_actor(kwargs.get('actor', None))
+        # Setup the initial the actor
+        self._actor = None
+        self.actor = kwargs.get('actor', self.get_initial_actor())
 
         # The entire Ground class is really just a wrapper around
         # this container, which stores all required Sprite widgets
@@ -44,18 +42,20 @@ class BaseGround(object):
         return self.cost_to_traverse
 
     def get_initial_actor(self):
-        return self.initial_actor
+        if self.initial_actor_cls:
+            return self.initial_actor_cls()
 
-    def add_actor(self, actor):
-        if actor is None:
-            return
+    @property
+    def actor(self):
+        return self._actor
 
-        # Clear out a previous actor
-        if self.actor:
-            self.remove_widget(self.actor)
+    @actor.setter
+    def actor(self, value):
+        if self._actor:
+            self.remove_widget(self._actor)
 
-        # Save the new actor
-        self.actor = actor
+        self._actor = value
+
 
     def render(self):
         self.container.clear_widgets()

@@ -16,21 +16,15 @@ class OpenGround(okapi_ground.BaseGround):
 
 
 class CatGround(OpenGround):
-
-    def get_initial_actor(self):
-        return actors.Cat()
+    initial_actor_cls = actors.Cat
 
 
 class RatGround(OpenGround):
-
-    def get_initial_actor(self):
-        return actors.Rat()
+    initial_actor_cls = actors.Rat
 
 
 class BlockGround(OpenGround):
-
-    def get_initial_actor(self):
-        return actors.Block()
+    initial_actor_cls = actors.Block
 
 
 class ImpassableGround(okapi_ground.BaseGround):
