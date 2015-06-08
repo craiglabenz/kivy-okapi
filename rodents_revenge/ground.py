@@ -26,6 +26,10 @@ class OpenGround(okapi_ground.BaseGround):
             self.level.game.lose_life()
             return True
 
+        if isinstance(actor, actors.Rat) and self.actor and isinstance(self.actor, actors.Cheese):
+            self.level.game.eat_cheese(self.actor)
+            return True
+
         current_target_x = self.x
         current_target_y = self.y
 

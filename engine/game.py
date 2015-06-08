@@ -185,5 +185,16 @@ class Game(BoxLayout):
     def on_new_level(self, new_level):
         pass
 
+    def next_level(self):
+        self.current_level_index += 1
+        self.load_level()
+
+    def load_level(self):
+        next_level = self.get_level(self.current_level_index)
+        if next_level:
+            self.current_level = next_level
+        else:
+            print ("Win screen!")
+
     def start(self):
-        self.current_level = self.get_level(self.current_level_index)
+        self.load_level()

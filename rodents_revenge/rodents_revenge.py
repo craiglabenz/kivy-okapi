@@ -72,26 +72,43 @@ class Game(OkapiGame):
             self.first_clock_cycle = False
             return
 
+        if len(self.cats) == 0:
+            self.next_level()
+
+        # Don't start moving the cats until the rat moves
+        if not getattr(self.current_level, 'has_rat_moved', False):
+            return
+
         for index, cat in enumerate(self.cats):
             if cat.detect_if_trapped():
+
+                # A cat has to be trapped for 2 clock cycles
+                if not getattr(cat, 'is_trapped', False):
+                    cat.is_trapped = True
+                    continue
+
                 cat.ground.actor = actors.Cheese()
                 del self.cats[index]
             else:
                 cat.move(self)
 
     def on_move_down(self, actor=None):
+        self.current_level.has_rat_moved = True
         actor = actor or self.player_actor
         self._move(actor, 1, 0)
 
     def on_move_up(self, actor=None):
+        self.current_level.has_rat_moved = True
         actor = actor or self.player_actor
         self._move(actor, -1, 0)
 
     def on_move_left(self, actor=None):
+        self.current_level.has_rat_moved = True
         actor = actor or self.player_actor
         self._move(actor, 0, -1)
 
     def on_move_right(self, actor=None):
+        self.current_level.has_rat_moved = True
         actor = actor or self.player_actor
         self._move(actor, 0, 1)
 
@@ -107,6 +124,11 @@ class Game(OkapiGame):
 
     def lose_life(self):
         print("Caught by the cat!")
+
+    def eat_cheese(self, cheese):
+        cheese.ground.actor = None
+        del cheese
+        print("You got 50 points!")
 
 
 class WindowManager(OkapiWindowManager):

@@ -1,8 +1,32 @@
 ;Posterity LOVES comments
 
 
-
 ;Level 1
+##################################
+#................................#
+#................................#
+#................................#
+#............r...................#
+#....bbbbbbbbbbbbbbbbbbbbbbbb....#
+#....bbbbbbbbcbbbbbbbbbbbbbbb....#
+#....bbbbbbbbbbbbbbbbbbbbbbbb....#
+#....bbbbbbbbbbbbbbbbbbbbbbbb....#
+#....bbbbbbbbbbbbbbbbbbbbbbbb....#
+#....bbbbbbbbbbbbbbbbbbbbbbbb....#
+#....bbbbbbbbbbbbbbbbbbbbbbbb....#
+#....bbbbbbbbbbbbbbbbbbbbbbbb....#
+#....bbbbbbbbbbbbbbbbbbbbbbbb....#
+#....bbbbbbbbbbbbbbbbbbbbbbbb....#
+#...#bbbbbbbbbbbbbbbbbbbbbbbb....#
+#....bbbbbbbbbbbbbbbbbbbbbbbb....#
+#................................#
+#................................#
+#................................#
+#................................#
+##################################
+
+
+;Level 2
 ##################################
 #................................#
 #................................#
