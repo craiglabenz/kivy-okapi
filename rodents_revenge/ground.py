@@ -73,6 +73,9 @@ class RatGround(OpenGround):
 class BlockGround(OpenGround):
     initial_actor_cls = actors.Block
 
+class NullGround(OpenGround):
+    is_passable = False
+    sprite_path = 'assets/images/black.png'
 
 class ImpassableGround(okapi_ground.BaseGround):
     is_passable = False

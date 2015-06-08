@@ -71,7 +71,8 @@ class Level(GridLayout):
 
         for row_index, row in enumerate(self.raw_level):
             self.ground.append([])
-
+            while len(row) < self.cols:
+                row.append(' ')
             for column_index, column_character in enumerate(row):
                 # Extract the ground type
                 ground_type_cls = self.ground_map[column_character]

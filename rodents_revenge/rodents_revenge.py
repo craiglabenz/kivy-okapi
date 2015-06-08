@@ -29,6 +29,7 @@ class Game(OkapiGame):
         "c": ground.CatGround,
         "r": ground.RatGround,
         "#": ground.ImpassableGround,
+        ' ': ground.NullGround
     }
 
     def __init__(self, *args, **kwargs):
