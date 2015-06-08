@@ -41,7 +41,7 @@ class BaseActor(object):
     def render(self):
         container = RelativeLayout()
         container.add_widget(Sprite(source=self.get_sprite_source()))
-        container.add_widget(Label(text=str(self.id)))
+        # container.add_widget(Label(text=str(self.id)))
         return container
 
     def get_sprite_source(self):

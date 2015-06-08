@@ -1,6 +1,5 @@
-import os
-
 # Kivy
+from kivy.clock import Clock
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 
@@ -37,7 +36,7 @@ class Level(GridLayout):
 
         super(Level, self).__init__(**kwargs)
 
-        self.hydrate_ground()
+        self.populate_map()
 
     def get_ground_by_coords(self, x, y):
         # No toruses!
@@ -62,7 +61,7 @@ class Level(GridLayout):
                 most_columns = len(row)
         return most_columns
 
-    def hydrate_ground(self):
+    def populate_map(self):
         """
         Works through ``self.raw_level``, which is a list of lists of chars,
         and puts that through ``self.ground_map`` to know which terrain is where.
@@ -107,6 +106,7 @@ class Game(BoxLayout):
     LEVEL_CLASS = Level
     EXTRA_GROUNDS = {}
     BLANK_GROUND_CHARACTER = ' '
+    CLOCK_INTERVAL = None
 
     def __init__(self, configuration, project_path, current_level_index=0, **kwargs):
         self.configuration = configuration
@@ -114,6 +114,17 @@ class Game(BoxLayout):
         self.current_level_index = current_level_index
         self.raw_levels = LevelFileReader(self.configuration.get('meta', 'levels_file')).levels
         super(Game, self).__init__(**kwargs)
+
+        self.should_run_update = True
+        if self.CLOCK_INTERVAL:
+            Clock.schedule_interval(self.clock_update_wrapper, float(self.CLOCK_INTERVAL))
+
+    def clock_update_wrapper(self, dt):
+        if self.should_run_update:
+            self.clock_update(dt)
+
+    def clock_update(self, dt):
+        pass
 
     def get_ground_map(self):
         """
@@ -176,4 +187,3 @@ class Game(BoxLayout):
 
     def start(self):
         self.current_level = self.get_level(self.current_level_index)
-

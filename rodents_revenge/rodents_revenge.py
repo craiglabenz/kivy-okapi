@@ -32,7 +32,10 @@ class Game(OkapiGame):
         ' ': ground.NullGround
     }
 
+    CLOCK_INTERVAL = 1.0
+
     def __init__(self, *args, **kwargs):
+        self.first_clock_cycle = True
         super(Game, self).__init__(*args, **kwargs)
 
         self.initialize_level_specific_objects()
@@ -64,6 +67,18 @@ class Game(OkapiGame):
         if isinstance(actor, actors.Cat):
             self.cats.append(actor)
 
+    def clock_update(self, dt):
+        if self.first_clock_cycle:
+            self.first_clock_cycle = False
+            return
+
+        for index, cat in enumerate(self.cats):
+            if cat.detect_if_trapped():
+                cat.ground.actor = actors.Cheese()
+                del self.cats[index]
+            else:
+                cat.move(self)
+
     def on_move_down(self, actor=None):
         actor = actor or self.player_actor
         self._move(actor, 1, 0)
@@ -86,6 +101,12 @@ class Game(OkapiGame):
 
         if new_ground and new_ground.can_accommodate(actor, delta_x, delta_y):
             new_ground.actor = actor
+            return True
+        else:
+            return False
+
+    def lose_life(self):
+        print("Caught by the cat!")
 
 
 class WindowManager(OkapiWindowManager):
