@@ -3,13 +3,28 @@
 
 
 ;Level 1
-c.......
-..bbbbr.
-..bbbb.#
-..bbbb..
-........
-.......c
-
+##################################
+#................................#
+#................................#
+#................................#
+#................................#
+#...rbbbbbbbbbbbbbbbbbbbbbbbb....#
+#....bbbbbbbbbbbbbbbbbbbbbbbb....#
+#....bbbbbbbbbbbbbbbbbbbbbbbb....#
+#....bbbbbbbbbbbbbbbbbbbbbbbb....#
+#....bbbbbbbbbbbbbbbbbbbbbbbb....#
+#....bbbbbbbbbbbbbbbbbbbbbbbb....#
+#....bbbbbbbbbbbbbbbbbbbbbbbb....#
+#....bbbbbbbbbbbbbbbbbbbbbbbb....#
+#....bbbbbbbbbbbbbbbbbbbbbbbb....#
+#....bbbbbbbbbbbbbbbbbbbbbbbbc...#
+#...#bbbbbbbbbbbbbbbbbbbbbbbb....#
+#...cbbbbbbbbbbbbbbbbbbbbbbbb....#
+#................................#
+#................................#
+#................................#
+#................................#
+##################################
 
 ;#############
 ;#       d   #
