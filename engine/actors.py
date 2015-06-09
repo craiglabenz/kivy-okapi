@@ -30,7 +30,7 @@ class BaseActor(object):
 
         # If the actor was somewhere else before, inform that
         # landlord we won't be renewing the lease
-        if self._ground:
+        if self._ground and getattr(self._ground, 'actor') == self:
             self._ground.actor = None
 
         if not self.id:
