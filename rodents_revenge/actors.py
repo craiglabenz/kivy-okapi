@@ -108,7 +108,8 @@ class Rat(BaseActor):
 
 
 class Block(BaseActor):
-    SPRITE_SOURCE = 'assets/images/fancy-block-50.png'
+    # SPRITE_SOURCE = 'assets/images/fancy-block-50.png'
+    SPRITE_SOURCE = 'assets/images/green-block-50.png'
     IS_MOVABLE = True
 
 
