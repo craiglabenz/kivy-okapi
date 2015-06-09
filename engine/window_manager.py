@@ -83,7 +83,7 @@ class WindowManager(BoxLayout):
 
     def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
         if not modifiers:
-            command_name = 'on_move_{}'.format(keycode[1])
+            command_name = 'on_press_{}'.format(keycode[1])
             command = getattr(self.current_screen, command_name, None)
             if command is not None:
                 command()

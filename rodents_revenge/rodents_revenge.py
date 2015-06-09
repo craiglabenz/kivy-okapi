@@ -73,6 +73,13 @@ class Game(OkapiGame):
             return
 
         if len(self.cats) == 0:
+            if getattr(self, 'next_level_countdown', None) is None:
+                self.next_level_countdown = 3
+
+            if self.next_level_countdown > 0:
+                self.next_level_countdown -= 1
+                return
+
             self.next_level()
 
         # Don't start moving the cats until the rat moves
@@ -92,22 +99,22 @@ class Game(OkapiGame):
             else:
                 cat.move(self)
 
-    def on_move_down(self, actor=None):
+    def on_press_down(self, actor=None):
         self.current_level.has_rat_moved = True
         actor = actor or self.player_actor
         self._move(actor, 1, 0)
 
-    def on_move_up(self, actor=None):
+    def on_press_up(self, actor=None):
         self.current_level.has_rat_moved = True
         actor = actor or self.player_actor
         self._move(actor, -1, 0)
 
-    def on_move_left(self, actor=None):
+    def on_press_left(self, actor=None):
         self.current_level.has_rat_moved = True
         actor = actor or self.player_actor
         self._move(actor, 0, -1)
 
-    def on_move_right(self, actor=None):
+    def on_press_right(self, actor=None):
         self.current_level.has_rat_moved = True
         actor = actor or self.player_actor
         self._move(actor, 0, 1)
@@ -144,6 +151,9 @@ class RodentsRevengeApp(Okapi):
     INI_PATH = "{}/params.ini".format(PROJECT_PATH)
 
     GAME_CLASS = Game
+
+    def get_application_name(self):
+        return "Rodent's Revenge"
 
     # def resize_window(self, window):
     #     window.size = (Game.ROWS * 50, Game.COLS * 50)
