@@ -28,9 +28,13 @@ class Okapi(App):
 
         return config
 
-    def get_window_manager(self, *args, **kwargs):
+    def get_window_manager_cls(self, *args, **kwargs):
         assert self.WINDOW_MANAGER_CLS is not None, 'Failed to set a ``WINDOW_MANAGER_CLS`` attr on your App'
-        return self.WINDOW_MANAGER_CLS(*args, **kwargs)
+        return self.WINDOW_MANAGER_CLS
+
+    def get_window_manager(self, *args, **kwargs):
+        kls = self.get_window_manager_cls(*args, **kwargs)
+        return kls(*args, **kwargs)
 
     def resize_window(self, window):
         pass
@@ -39,7 +43,6 @@ class Okapi(App):
         self.configuration = self.load_configuration(self.get_ini_path())
         self.root = self.get_window_manager(
             configuration=self.configuration,
-            project_path=self.PROJECT_PATH,
             game_class=self.GAME_CLASS
         )
         self.resize_window(Window)
@@ -62,6 +65,3 @@ class Okapi(App):
 
     def close_window(self):
         Window.close()
-
-
-

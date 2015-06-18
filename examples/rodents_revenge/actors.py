@@ -1,11 +1,15 @@
 from __future__ import print_function, absolute_import
+import os
 
 # Engine
-from engine.actors import BaseActor
+from okapi.engine.actors import BaseActor
+
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 
 
 class Cat(BaseActor):
-    SPRITE_SOURCE = 'assets/images/cat-50.png'
+    project_root = project_root
+    sprite_path = 'assets/images/cat-50.png'
     IS_MOVABLE = True
 
     MOVES = {
@@ -102,17 +106,30 @@ class Cat(BaseActor):
         return True
 
 
+class Hellcat(Cat):
+    sprite_path = 'assets/images/hellcat-50.png'
+
+    def move(self, game):
+        coords = self.get_best_move_toward(self.ground.level.game.player_actor.ground)
+        if not coords:
+            return super(Hellcat, self).move(game)
+        else:
+            game._move(self, *coords)
+
+
 class Rat(BaseActor):
-    SPRITE_SOURCE = 'assets/images/rat-50.png'
+    project_root = project_root
+    sprite_path = 'assets/images/rat-50.png'
     IS_MOVABLE = True
 
 
 class Block(BaseActor):
-    # SPRITE_SOURCE = 'assets/images/fancy-block-50.png'
-    SPRITE_SOURCE = 'assets/images/green-block-50.png'
+    project_root = project_root
+    sprite_path = 'assets/images/green-block-50.png'
     IS_MOVABLE = True
 
 
 class Cheese(BaseActor):
-    SPRITE_SOURCE = 'assets/images/fancy-cheese-50.png'
+    project_root = project_root
+    sprite_path = 'assets/images/fancy-cheese-50.png'
     IS_MOVABLE = False

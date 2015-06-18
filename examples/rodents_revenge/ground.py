@@ -1,20 +1,19 @@
-# mimicks pip install of engine
 import os
-import sys
-ENGINE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
-sys.path.append(ENGINE_PATH)
 
 # Engine
-from engine import ground as okapi_ground
+from okapi.engine.ground import BaseGround
 
 # Local
 import actors
 
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 
-class OpenGround(okapi_ground.BaseGround):
+
+class OpenGround(BaseGround):
+    project_root = project_root
     sprite_path = 'assets/images/fancy-ground-50.png'
 
-    def can_accommodate(self, actor, delta_x, delta_y):
+    def can_accommodate(self, actor, delta_x, delta_y, is_pathfinding=False):
         """
         This is the code that pushes rows of blocks!
         If we try to walk onto ground already occupied by an actor,
@@ -23,18 +22,19 @@ class OpenGround(okapi_ground.BaseGround):
         at which time we move the entire row of blocks.
         """
         if isinstance(actor, actors.Cat) and self.actor and isinstance(self.actor, actors.Rat):
-            self.level.game.lose_life()
+            if not is_pathfinding:
+                self.level.game.lose_life()
             return True
 
         if isinstance(actor, actors.Rat) and self.actor and isinstance(self.actor, actors.Cheese):
-            self.level.game.eat_cheese(self.actor)
+            if not is_pathfinding:
+                self.level.game.eat_cheese(self.actor)
             return True
 
         current_target_x = self.x
         current_target_y = self.y
 
         movable_row = []
-        # if isinstance(self.actor, actors.Block):
         if self.actor and self.actor.IS_MOVABLE:
 
             # Only mice can push blocks. Not cats. That would make no
@@ -69,9 +69,10 @@ class OpenGround(okapi_ground.BaseGround):
 
                 # Land-ho! We found an empty spot.
                 else:
-                    movable_row.reverse()
-                    for actor in movable_row:
-                        self.level.game._move(actor, delta_x, delta_y)
+                    if not is_pathfinding:
+                        movable_row.reverse()
+                        for actor in movable_row:
+                            self.level.game._move(actor, delta_x, delta_y)
                     return True
 
         return super(OpenGround, self).can_accommodate(actor, delta_x, delta_y)
@@ -81,6 +82,10 @@ class CatGround(OpenGround):
     initial_actor_cls = actors.Cat
 
 
+class HellcatGround(OpenGround):
+    initial_actor_cls = actors.Hellcat
+
+
 class RatGround(OpenGround):
     initial_actor_cls = actors.Rat
 
@@ -88,10 +93,12 @@ class RatGround(OpenGround):
 class BlockGround(OpenGround):
     initial_actor_cls = actors.Block
 
+
 class NullGround(OpenGround):
     is_passable = False
     sprite_path = 'assets/images/black.png'
 
-class ImpassableGround(okapi_ground.BaseGround):
+
+class ImpassableGround(OpenGround):
     is_passable = False
     sprite_path = 'assets/images/fancy-impassable-50.png'
