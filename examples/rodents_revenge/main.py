@@ -55,6 +55,8 @@ class Game(OkapiGame):
         self.player_lives = int(self.configuration.get('meta', 'starting_lives'))
         self.player_score = 0
 
+        self.pause_for = 0
+
         self.initialize_level_specific_objects()
 
     def on_new_level(self):
@@ -89,6 +91,10 @@ class Game(OkapiGame):
             self.first_clock_cycle = False
             return
 
+        if self.pause_for > 0:
+            self.pause_for -= 1
+            return
+
         if len(self.cats) == 0:
             if getattr(self, 'next_level_countdown', None) is None:
                 self.next_level_countdown = 2
@@ -120,7 +126,7 @@ class Game(OkapiGame):
     def on_press_down(self, actor=None):
         if not self.rat_can_move:
             return
-
+        self.pause_for = 0
         self.current_level.has_rat_moved = True
         actor = actor or self.player_actor
         self._move(actor, 0, 1)
@@ -128,7 +134,7 @@ class Game(OkapiGame):
     def on_press_up(self, actor=None):
         if not self.rat_can_move:
             return
-
+        self.pause_for = 0
         self.current_level.has_rat_moved = True
         actor = actor or self.player_actor
         self._move(actor, 0, -1)
@@ -136,7 +142,7 @@ class Game(OkapiGame):
     def on_press_left(self, actor=None):
         if not self.rat_can_move:
             return
-
+        self.pause_for = 0
         self.current_level.has_rat_moved = True
         actor = actor or self.player_actor
         self._move(actor, -1, 0)
@@ -144,7 +150,7 @@ class Game(OkapiGame):
     def on_press_right(self, actor=None):
         if not self.rat_can_move:
             return
-
+        self.pause_for = 0
         self.current_level.has_rat_moved = True
         actor = actor or self.player_actor
         self._move(actor, 1, 0)
@@ -161,8 +167,16 @@ class Game(OkapiGame):
 
     def lose_life(self):
         self.should_run_update = False
-        self.rat_can_move = False
-        print("Caught by the cat!")
+        self.player_lives -= 1
+        self.screen_manager.rerender_menu()
+        self.pause_for = 2
+
+        while True:
+            ground = self.current_level.get_random_square()
+            if ground.is_passable and not ground.actor:
+                ground.actor = self.player_actor
+                self.should_run_update = True
+                return
 
     def next_level(self):
         super(Game, self).next_level()

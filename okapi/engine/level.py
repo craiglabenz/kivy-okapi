@@ -1,5 +1,6 @@
 from __future__ import print_function, absolute_import, unicode_literals
 import collections
+import random
 
 # Local
 from .base import PureOkapiMixin
@@ -125,3 +126,8 @@ class BaseLevel(PureOkapiMixin, object):
             if len(row) > most_columns:
                 most_columns = len(row)
         return most_columns
+
+    def get_random_square(self):
+        random_x = random.randint(0, len(self.ground))
+        random_y = random.randint(0, len(self.ground[random_x]))
+        return self.ground[random_x][random_y]
