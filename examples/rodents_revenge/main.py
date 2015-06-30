@@ -1,20 +1,10 @@
 from __future__ import print_function, absolute_import
-
-
-from kivy.factory import Factory
-from kivy.graphics import Color
-from kivy.uix.button import Button
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.label import Label
-# from kivy.properties import ObjectProperty, ListProperty, StringProperty, NumericProperty
-# from kivy.clock import Clock
-
-# In practice, `Okapi` will be installed via pip. This mimicks that.
 import os
 import sys
-PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__)))
-ENGINE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir))
-sys.path.append(ENGINE_PATH)
+
+from kivy.graphics import Color
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
 
 # Engine
 from okapi.app import Okapi as OkapiApp
@@ -28,6 +18,8 @@ from okapi.screen_manager import ScreenManager as OkapiScreenManager
 import actors
 import ground
 from welcome_screen import WelcomeScreen
+
+PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 
 MAX_DISTANCE = sys.maxint
 

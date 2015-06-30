@@ -2,10 +2,14 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup
-# from setuptools.command.test import test as TestCommand
 import os
 import re
 import sys
+
+
+def readme():
+    with open('readme.md') as f:
+        return f.read()
 
 
 # Borrowed from the infamous
@@ -59,26 +63,31 @@ if sys.argv[-1] == 'publish-test':
 
 
 CLASSIFIERS = [
-    "Framework :: Kivy",
+    "Topic :: Games/Entertainment",
     "Intended Audience :: Developers",
     "Programming Language :: Python",
+    "Development Status :: 3 - Alpha",
+    "Natural Language :: English",
 ]
 
 INSTALL_REQUIRES = [
 ]
 
 setup(
-    name="okapi",
+    name="kivy-okapi",
     packages=get_packages("okapi"),
     package_data=get_package_data("okapi"),
     version=version,
-    description="Grid-based game framework built on top of Kivy 1.9",
-    url="https://github.com/craiglabenz/okapi",
-    download_url="https://github.com/craiglabenz/okapi/tarball/{0}".format(version),
-    keywords=["kivy", "games", "grid", "grid-based"],
+    description="Grid-based game framework built with Kivy 1.9",
+    long_description=readme(),
+    url="https://github.com/craiglabenz/kivy-okapi",
+    download_url="https://github.com/craiglabenz/kivy-okapi/tarball/{0}".format(version),
+    keywords=["kivy", "python", "python2", "game", "games", "grid", "grid-based"],
     classifiers=CLASSIFIERS,
     install_requires=INSTALL_REQUIRES,
     author="Craig Labenz",
     author_email="craig.labenz@gmail.com",
-    license="MIT"
+    license="MIT",
+    include_package_data=True,
+    zip_safe=False
 )
