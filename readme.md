@@ -12,8 +12,9 @@ Installing packages with Kivy is a joy because you cannot use virtual environmen
 
 1. Next, install `Okapi` from PyPI, but be sure to install it where Kivy is willing to look on your machine. On Mac OS X, that is here: `/Applications/Kivy.app/Contents/Resources/venv/lib/python2.7/site-packages`
 
-    pip install kivy-okapi==0.1.0 -t /Applications/Kivy.app/Contents/Resources/venv/lib/python2.7/site-packages
-
+    ```sh
+    pip install kivy-okapi -t /Applications/Kivy.app/Contents/Resources/venv/lib/python2.7/site-packages
+    ```
 
 #### Launching an `Okapi` App
 
