@@ -20,6 +20,39 @@ Once `Okapi` is installed where Kivy is willing to look, you can simply navigate
 
 For reference, a complete example is provided in the `/examples/rodents_revenge` directory
 
+#### Make your levels
+
+Create a file called `levels.txt`, place it next to your `main.py` file, and populate it like so:
+
+```txt
+;Level 1
+##############
+#............#
+#....bbb.....#
+#....bbb.....#
+#............#
+##############
+
+;Level 2
+##############
+#...#....#...#
+#...#....#...#
+#...#....#...#
+#...#....#...#
+##############
+
+; etc etc
+```
+
+The rules here are:
+
+* Lines beginning with a semi-colon are comments and ignored
+* Empty lines terminate a level
+
+Assuming your game is level-based (a Chess app, for example, would not be and would only need to define 1 such block), your `Game` class will now have a list of those parsed blocks of text in `self.raw_levels`. This attribute is a list of lists, where each outer list is a row and each inner list is a column in that row. For now, they are still plain characters.
+
+The `Game` section below provides more information about how to manage multiple levels.
+
 #### Create an `OkapiApp` class
 
 In your `main.py` file, provide this bare minimum skeleton:
@@ -177,8 +210,20 @@ class Game(OkapiGame):
     def clock_update(self, dt):
         # Make the game happen!
 
+        if win_condition:
+            self.next_level()
+
     def on_press_down(self):
         # Move something down!
+
+    def next_level(self):
+        """
+        Already defined by `OkapiGame`. Call this function whenever a player has cleared one level
+        and you are ready to advance through `self.raw_levels`. This will trigger the initialization
+        of the next level and update your `screen_manager.current_screen` value to be the screen
+        of the new level. It will automatically start listening to keyboard input.
+        """
+        pass
 
 ```
 
