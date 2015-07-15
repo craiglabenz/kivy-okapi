@@ -72,7 +72,7 @@ class OpenGround(BaseGround):
                     if not is_pathfinding:
                         movable_row.reverse()
                         for actor in movable_row:
-                            self.level.game._move(actor, delta_x, delta_y)
+                            self.level.game.move_actor(actor, delta_x, delta_y)
                     return True
 
         return super(OpenGround, self).can_accommodate(actor, delta_x, delta_y)

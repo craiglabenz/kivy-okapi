@@ -90,7 +90,7 @@ class Cat(BaseActor):
 
         for considered_move in considered_moves:
             x, y = self.MOVES[considered_move]
-            has_moved = game._move(self, x, y)
+            has_moved = game.move_actor(self, x, y)
 
             if has_moved:
                 break
@@ -114,7 +114,7 @@ class Hellcat(Cat):
         if not coords:
             return super(Hellcat, self).move(game)
         else:
-            game._move(self, *coords)
+            game.move_actor(self, *coords)
 
 
 class Rat(BaseActor):
