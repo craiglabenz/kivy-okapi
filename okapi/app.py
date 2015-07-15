@@ -6,6 +6,9 @@ import codecs
 from kivy.app import App
 from kivy.core.window import Window
 
+# Okapi
+from .screen_manager import ScreenManager
+
 
 class Okapi(App):
     """Main game class
@@ -14,11 +17,14 @@ class Okapi(App):
     INI_PATH = None
     GAME_CLASS = None
     PROJECT_PATH = None
-    WINDOW_MANAGER_CLS = None
+    SCREEN_MANAGER_CLS = ScreenManager
 
     def get_ini_path(self):
-        assert self.INI_PATH is not None, 'Failed to set an ``INI_PATH`` on {}'.format(type(self).__name__)
-        return self.INI_PATH
+        return "{}/params.ini".format(self.get_project_path())
+
+    def get_project_path(self):
+        assert self.PROJECT_PATH is not None, "Must define a project path."
+        return self.PROJECT_PATH
 
     def load_configuration(self, path):
         config = SafeConfigParser()
@@ -28,12 +34,12 @@ class Okapi(App):
 
         return config
 
-    def get_window_manager_cls(self, *args, **kwargs):
-        assert self.WINDOW_MANAGER_CLS is not None, 'Failed to set a ``WINDOW_MANAGER_CLS`` attr on your App'
-        return self.WINDOW_MANAGER_CLS
+    def get_screen_manager_cls(self, *args, **kwargs):
+        assert self.SCREEN_MANAGER_CLS is not None, 'Failed to set a ``SCREEN_MANAGER_CLS`` attr on your App'
+        return self.SCREEN_MANAGER_CLS
 
-    def get_window_manager(self, *args, **kwargs):
-        kls = self.get_window_manager_cls(*args, **kwargs)
+    def get_screen_manager(self, *args, **kwargs):
+        kls = self.get_screen_manager_cls(*args, **kwargs)
         return kls(*args, **kwargs)
 
     def resize_window(self, window):
@@ -41,7 +47,7 @@ class Okapi(App):
 
     def build(self):
         self.configuration = self.load_configuration(self.get_ini_path())
-        self.root = self.get_window_manager(
+        self.root = self.get_screen_manager(
             configuration=self.configuration,
             game_class=self.GAME_CLASS
         )
