@@ -128,9 +128,6 @@ class BaseLevel(PureOkapiMixin, object):
         return most_columns
 
     def get_random_square(self):
-        try:
-            random_x = random.randint(0, len(self.ground))
-            random_y = random.randint(0, len(self.ground[random_x]))
-            return self.ground[random_x][random_y]
-        except IndexError:
-            return self.get_random_square()
+        random_y = random.randint(0, len(self.ground))
+        random_x = random.randint(0, len(self.ground[random_y]))
+        return self.ground[random_y][random_x]

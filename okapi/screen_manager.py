@@ -129,6 +129,9 @@ class ScreenManager(BoxLayout):
         self.game.start()
         self.update_screen_from_game()
 
+    def get_screen_from_game(self):
+        raise NotImplementedError("Your `ScreenManager` class must implement this function.")
+
     def update_screen_from_game(self):
         self.current_screen = self.get_screen_from_game()
 

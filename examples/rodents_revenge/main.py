@@ -91,6 +91,8 @@ class Game(OkapiGame):
             if getattr(self, 'next_level_countdown', None) is None:
                 self.next_level_countdown = 2
 
+            # Allow a few seconds for the player to eat the cheese
+            # the last cat turned into
             if self.next_level_countdown > 0:
                 self.next_level_countdown -= 1
                 return
