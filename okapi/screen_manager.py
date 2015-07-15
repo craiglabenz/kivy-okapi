@@ -143,6 +143,14 @@ class ScreenManager(BoxLayout):
             if command is not None:
                 command()
 
+        if modifiers:
+            modifiers.sort()
+            modifiers_string = "_".join(modifiers)
+            command_name = 'on_press_{}_{}'.format(modifiers_string, keycode[1])
+            command = getattr(self.current_screen, command_name, None)
+            if command is not None:
+                command
+
         if getattr(self, 'game', None):
             command = getattr(self.game, 'on_press_{}'.format(keycode[1]), None)
             if command:
