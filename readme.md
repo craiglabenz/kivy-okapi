@@ -198,3 +198,13 @@ This will immediately cause a reanimation, showing the white knight having just 
 
 Moving legality is determined by the target ground's `can_accommodate()` method. By default, this rejects movements into occupied territory. Of course, that rule makes little sense for chess, so for that example you'd want to override that function to accept new pieces at any time, and to remove from the game any piece currently found in that spot.
 
+
+## Rodent's Revenge
+
+One of my favorite games as a kid was [Rodent's Revenge](https://en.wikipedia.org/wiki/Rodent%27s_Revenge). It's a simple game of block pushing and cat trapping, but the gameplay is simple and quick enough that the game is very addicting.
+
+So much did I like this game, in fact, that I cloned it as a working example of `Okapi`.
+
+![Rodent's Revenge](https://raw.githubusercontent.com/craiglabenz/kivy-okapi/master/media/okapi-rodents-revenge.png)
+
+
