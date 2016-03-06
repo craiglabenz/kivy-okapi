@@ -1,4 +1,5 @@
 from __future__ import print_function, absolute_import
+import ConfigParser
 
 # Local
 from .ground import BaseGround
@@ -17,11 +18,30 @@ class Game(object):
         self.configuration = configuration
         self.current_level_index = current_level_index
         self.raw_levels = LevelFileReader(self.configuration.get('meta', 'levels_file')).levels
+
+        # Honor level range trimming
+        try:
+            self.starting_level = int(self.configuration.get('meta', 'starting_level'))
+        except ConfigParser.NoOptionError:
+            self.starting_level = 1
+
+        try:
+            self.final_level = int(self.configuration.get('meta', 'final_level'))
+        except ConfigParser.NoOptionError:
+            self.final_level = len(self.raw_levels)
+
+        starting_index = self.starting_level - 1
+        ending_index = self.final_level
+        self.raw_levels = self.raw_levels[starting_index:ending_index]
+
         self.should_run_update = kwargs.get('should_run_update', True)
         self.screen_manager = screen_manager
 
     def get_clock_interval(self):
         return self.CLOCK_INTERVAL
+
+    def get_score(self):
+        raise NotImplemented()
 
     def get_clock_tuple(self):
         clock_interval = self.get_clock_interval()
@@ -72,15 +92,19 @@ class Game(object):
 
     def get_level(self, level_index):
         self.on_new_level()
-        return self.get_level_class(level_index)(
-            raw_level=self.raw_levels[level_index],
-            ground_map=self.get_ground_map(),
-            on_add_actor=self.on_add_actor,
-            index=level_index,
-            game=self,
-            # Don't tell someone they're on the 0th level. That shit's crazy
-            level_index=level_index + 1
-        )
+        if len(self.raw_levels) > level_index:
+            return self.get_level_class(level_index)(
+                raw_level=self.raw_levels[level_index],
+                ground_map=self.get_ground_map(),
+                on_add_actor=self.on_add_actor,
+                index=level_index,
+                game=self,
+                # Don't tell someone they're on the 0th level. That shit's crazy
+                level_index=level_index + 1
+            )
+        else:
+            # You did it!
+            return None
 
     @property
     def current_level(self):
@@ -102,7 +126,7 @@ class Game(object):
         if next_level:
             self.current_level = next_level
         else:
-            print ("Win screen!")
+            self.screen_manager.render_victory_screen()
 
     def start(self):
         self.load_level()

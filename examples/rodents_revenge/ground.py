@@ -38,7 +38,7 @@ class OpenGround(BaseGround):
         if self.actor and self.actor.IS_MOVABLE:
 
             # Only mice can push blocks. Not cats. That would make no
-            # real world sense. Come
+            # real world sense. Come on!
             if not isinstance(actor, actors.Rat):
                 return False
 
@@ -58,8 +58,9 @@ class OpenGround(BaseGround):
                     return False
 
                 # If the ground has an actor...
-                if ground.actor:
-                    # Non-blocks are show-stoppers. Ruse is up. (Will be updated when we have cheese!)
+                if ground.actor and not getattr(ground.actor, 'IS_SQUISHABLE', False):
+
+                    # Non-blocks are show-stoppers. Ruse is up.
                     if not ground.actor.IS_MOVABLE:
                         return False
 
@@ -69,6 +70,11 @@ class OpenGround(BaseGround):
 
                 # Land-ho! We found an empty spot.
                 else:
+
+                    actor_is_squishable = getattr(ground.actor, 'IS_SQUISHABLE', False)
+                    if actor_is_squishable:
+                        ground.actor = None
+
                     if not is_pathfinding:
                         movable_row.reverse()
                         for actor in movable_row:

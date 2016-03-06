@@ -128,6 +128,10 @@ class BaseLevel(PureOkapiMixin, object):
         return most_columns
 
     def get_random_square(self):
-        random_y = random.randint(0, len(self.ground))
-        random_x = random.randint(0, len(self.ground[random_y]))
-        return self.ground[random_y][random_x]
+        try:
+            random_y = random.randint(0, len(self.ground))
+            random_x = random.randint(0, len(self.ground[random_y]))
+            return self.ground[random_y][random_x]
+        except IndexError:
+            # Something went wrong with the map? Just try again.
+            return self.get_random_square()

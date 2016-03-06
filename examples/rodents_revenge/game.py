@@ -99,6 +99,9 @@ class Game(OkapiGame):
             else:
                 cat.move(self)
 
+    def get_score(self):
+        return self.player_score
+
     def on_press_down(self, actor=None):
         if not self.rat_can_move:
             return
@@ -144,6 +147,11 @@ class Game(OkapiGame):
     def lose_life(self):
         self.should_run_update = False
         self.player_lives -= 1
+
+        if self.player_lives == 0:
+            self.render_lose_screen()
+            return
+
         self.screen_manager.rerender_menu()
         self.pause_for = 2
 
@@ -153,6 +161,9 @@ class Game(OkapiGame):
                 ground.actor = self.player_actor
                 self.should_run_update = True
                 return
+
+    def render_lose_screen(self):
+        self.screen_manager.render_lose_screen()
 
     def next_level(self):
         super(Game, self).next_level()

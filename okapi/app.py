@@ -16,8 +16,11 @@ class Okapi(App):
 
     INI_PATH = None
     GAME_CLASS = None
+    MENU_CLASS = None
     PROJECT_PATH = None
     SCREEN_MANAGER_CLS = ScreenManager
+    VICTORY_SCREEN_CLASS = None
+    WELCOME_SCREEN_CLASS = None
 
     def get_ini_path(self):
         return "{}/params.ini".format(self.get_project_path())
@@ -49,7 +52,11 @@ class Okapi(App):
         self.configuration = self.load_configuration(self.get_ini_path())
         self.root = self.get_screen_manager(
             configuration=self.configuration,
-            game_class=self.GAME_CLASS
+            game_class=self.GAME_CLASS,
+            lose_screen_class=self.LOSE_SCREEN_CLASS,
+            menu_class=self.MENU_CLASS,
+            victory_screen_class=self.VICTORY_SCREEN_CLASS,
+            welcome_screen_class=self.WELCOME_SCREEN_CLASS
         )
         self.resize_window(Window)
 

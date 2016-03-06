@@ -133,3 +133,4 @@ class Cheese(BaseActor):
     project_root = project_root
     sprite_path = 'assets/images/fancy-cheese-50.png'
     IS_MOVABLE = False
+    IS_SQUISHABLE = True
